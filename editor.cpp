@@ -30,12 +30,15 @@ int main(int argc, char *argv[]) {
     case 100: // d
       x += 1;
       break;
+    case 127: // backspace
+      delch();
+      break;
     default:
       break;
     }
     move(y, x);
     refresh();
-  } while (c != 127); // backspace
+  } while (c != 10); // backspace
   endwin();
   // deallocated memory and ends ncurses
 
