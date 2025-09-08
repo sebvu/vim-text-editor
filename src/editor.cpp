@@ -6,6 +6,7 @@ int main(int argc, char *argv[]) {
   initscr();
 
   keypad(stdscr, TRUE); // enable keypad mode on curr window
+  noecho();
 
   int x, y, c;
   x = y = 0;
