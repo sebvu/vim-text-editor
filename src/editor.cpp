@@ -1,3 +1,4 @@
+#include <fstream>
 #include <ncurses.h>
 
 int main(int argc, char *argv[]) {
@@ -9,7 +10,8 @@ int main(int argc, char *argv[]) {
   noecho();
 
   int x, y, c;
-  x = y = 0;
+  x = 2;
+  y = 0;
 
   move(y, x);
   refresh();
@@ -20,7 +22,7 @@ int main(int argc, char *argv[]) {
 
     switch (c) {
     case KEY_LEFT: // left arrow
-      if (x > 0)
+      if (x > 2)
         x -= 1;
       break;
     case KEY_UP: // up arrow
@@ -34,7 +36,7 @@ int main(int argc, char *argv[]) {
       x += 1;
       break;
     case KEY_BACKSPACE: // backspace
-      if (x > 0) {
+      if (x > 2) {
         x -= 1;
         move(y, x);
         delch();
