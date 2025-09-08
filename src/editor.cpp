@@ -1,55 +1,69 @@
 #include <fstream>
 #include <ncurses.h>
+#include <vector>
 
 int main(int argc, char *argv[]) {
   // initialize the screen
   // sets up memory and clears the screen
   initscr();
-
   keypad(stdscr, TRUE); // enable keypad mode on curr window
-  noecho();
+  noecho();             // doesn't echo clicking random keys
 
-  int x, y, c;
-  x = 2;
-  y = 0;
+  std::vector<std::string> lines = {"", "", "",
+                                    "", "", ""}; // line representations
 
-  move(y, x);
+  int curr_x, curr_y, ch;
+  curr_x = 2; // this is col dumb jester
+  curr_y = 0; // this is row dumb jester
+
+  move(curr_y, curr_x);
   refresh();
 
-  do {
-    c = getch();
-    // printw("%d", c);
+  while ((ch = getch()) != KEY_BTAB) {
+    clear(); // clears current window (stdscr)
 
-    switch (c) {
+    // calculating relative line numbers
+    for (int i = 0; i < (int)lines.size(); i++) {
+      int rel = i - curr_y; // relative line pos
+      if (i == curr_y) {
+        mvprintw(i, 0, "%2d %s", 0, lines[i].c_str());
+      } else {
+        mvprintw(i, 0, "%2d %s", abs(rel), lines[i].c_str());
+      }
+    }
+
+    move(curr_y, curr_x);
+    refresh();
+
+    // movement rules
+    switch (ch) {
     case KEY_LEFT: // left arrow
-      if (x > 2)
-        x -= 1;
+      if (curr_x > 2)
+        curr_x -= 1;
       break;
     case KEY_UP: // up arrow
-      if (y > 0)
-        y -= 1;
+      if (curr_y > 0)
+        curr_y -= 1;
       break;
     case KEY_DOWN: // down arrow
-      y += 1;
+      curr_y += 1;
       break;
     case KEY_RIGHT: // right arrow
-      x += 1;
+      curr_x += 1;
       break;
     case KEY_BACKSPACE: // backspace
-      if (x > 2) {
-        x -= 1;
-        move(y, x);
+      if (curr_x > 2) {
+        curr_x -= 1;
+        move(curr_y, curr_x);
         delch();
       }
       break;
     default:
-      addch(c);
-      getyx(stdscr, y, x); // update y, x to ncurses' real cursor pos
+      addch(ch);
+      getyx(stdscr, curr_y, curr_x); // update y, x to ncurses' real cursor pos
       break;
     }
-    move(y, x);
-    refresh();
-  } while (c != 999); // just filler c
+  }
   endwin();
   // deallocated memory and ends ncurses
 
