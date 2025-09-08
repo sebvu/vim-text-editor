@@ -1,7 +1,7 @@
 all: hello # just runs hello:
 
 hello: main.cpp # requires main.cpp
-	g++ -lncurses main.cpp -o main
+	g++ -lncurses main.cpp -o ./src/main
 
-editor: editor.cpp
-	g++ -lncurses editor.cpp -o editor
+editor: ./src/editor.cpp
+	g++ -lncurses ./src/editor.cpp -o ./src/editor
