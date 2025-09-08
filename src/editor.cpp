@@ -5,6 +5,8 @@ int main(int argc, char *argv[]) {
   // sets up memory and clears the screen
   initscr();
 
+  keypad(stdscr, TRUE); // enable keypad mode on curr window
+
   int x, y, c;
   x = y = 0;
 
@@ -16,29 +18,35 @@ int main(int argc, char *argv[]) {
     // printw("%d", c);
 
     switch (c) {
-    case 97: // a
+    case KEY_LEFT: // left arrow
       if (x > 0)
         x -= 1;
       break;
-    case 119: // w
+    case KEY_UP: // up arrow
       if (y > 0)
         y -= 1;
       break;
-    case 115: // s
+    case KEY_DOWN: // down arrow
       y += 1;
       break;
-    case 100: // d
+    case KEY_RIGHT: // right arrow
       x += 1;
       break;
-    case 127: // backspace
-      delch();
+    case KEY_BACKSPACE: // backspace
+      if (x > 0) {
+        x -= 1;
+        move(y, x);
+        delch();
+      }
       break;
     default:
+      addch(c);
+      getyx(stdscr, y, x); // update y, x to ncurses' real cursor pos
       break;
     }
     move(y, x);
     refresh();
-  } while (c != 10); // backspace
+  } while (c != 999); // just filler c
   endwin();
   // deallocated memory and ends ncurses
 
