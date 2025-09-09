@@ -1,0 +1,18 @@
+[
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-Wall",
+      "-Wextra",
+      "-O2",
+      "-Iinclude",
+      "-c",
+      "-o",
+      "obj/vimeditor.o",
+      "src/vimeditor.cpp"
+    ],
+    "directory": "/home/sebvu/proj",
+    "file": "/home/sebvu/proj/src/vimeditor.cpp",
+    "output": "/home/sebvu/proj/obj/vimeditor.o"
+  }
+]
