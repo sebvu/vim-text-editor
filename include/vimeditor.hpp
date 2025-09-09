@@ -1,6 +1,5 @@
 #ifndef VIMEDITOR_HPP
 #define VIMEDITOR_HPP
-#include "ncurses.h"
 #include <string>
 #include <vector>
 
