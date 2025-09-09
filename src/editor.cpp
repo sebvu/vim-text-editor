@@ -55,11 +55,12 @@ int main(int argc, char *argv[]) {
       break;
     case KEY_BACKSPACE: // backspace
       if (curr_x > MIN_X) {
-        lines[curr_y].pop_back();
+        lines[curr_y].erase(lines[curr_y].begin() + curr_x - MIN_X - 1);
         curr_x -= 1;
         // delch();
       } else if (curr_y > MIN_Y) { // append curr line to prev line. no action
                                    // if at 0th y line
+        curr_x = lines[curr_y - 1].size() + MIN_X;
         lines[curr_y - 1] += lines[curr_y];
         lines.erase(lines.begin() + curr_y);
         curr_y -= 1;
@@ -72,9 +73,10 @@ int main(int argc, char *argv[]) {
       break;
     default:
       // addch(ch);
-      lines[curr_y].push_back('a');
+      lines[curr_y].insert(lines[curr_y].begin() + curr_x - MIN_X, ch);
       curr_x += 1;
-      // getyx(stdscr, curr_y, curr_x); // update y, x to ncurses' real cursor pos
+      // getyx(stdscr, curr_y, curr_x); // update y, x to ncurses' real cursor
+      // pos
       break;
     }
   } while (ch != KEY_BTAB);
