@@ -1,16 +1,12 @@
 #include "vimeditor.hpp"
 #include "ncurses.h"
+#include <algorithm>
 #include <string>
 #include <vector>
 
-VimEditor::VimEditor() {
-  // initialize window and rules
-  initscr();
-  keypad(stdscr, TRUE);
-  noecho();
-};
+VimEditor::VimEditor() {}; // include file loading later
 
-void VimEditor::chHandler(char c) {
+void VimEditor::chHandler(int c) {
   // movement rules
   switch (c) {
   case KEY_LEFT: // left arrow
@@ -18,15 +14,19 @@ void VimEditor::chHandler(char c) {
       curr_x -= 1;
     break;
   case KEY_UP: // up arrow
-    if (curr_y > MIN_Y)
+    if (curr_y > MIN_Y) {
       curr_y -= 1;
+      curr_x = std::min(static_cast<int>(lines[curr_y].size()) + MIN_X, curr_x);
+    }
     break;
   case KEY_DOWN: // down arrow
-    if (curr_y < lines.size() - 1)
+    if (curr_y < static_cast<int>(lines.size()) - 1) {
       curr_y += 1;
+      curr_x = std::min(static_cast<int>(lines[curr_y].size()) + MIN_X, curr_x);
+    }
     break;
   case KEY_RIGHT: // right arrow
-    if (curr_x < lines[curr_y].size() + MIN_X)
+    if (curr_x < static_cast<int>(lines[curr_y].size()) + MIN_X)
       curr_x += 1;
     break;
   case KEY_BACKSPACE: // backspace
@@ -36,7 +36,7 @@ void VimEditor::chHandler(char c) {
       // delch();
     } else if (curr_y > MIN_Y) { // append curr line to prev line. no action
                                  // if at 0th y line
-      curr_x = lines[curr_y - 1].size() + MIN_X;
+      curr_x = static_cast<int>(lines[curr_y - 1].size()) + MIN_X;
       lines[curr_y - 1] += lines[curr_y];
       lines.erase(lines.begin() + curr_y);
       curr_y -= 1;
@@ -68,7 +68,7 @@ void VimEditor::renderLines() {
   }
 }
 
-void VimEditor::runWindow() {
+void VimEditor::runEditor() {
   // initialize the screen
   // sets up memory and clears the screen
   initscr();
@@ -84,12 +84,12 @@ void VimEditor::runWindow() {
     refresh();
 
     ch = getch();
-    VimEditor::chHandler(ch);
+    chHandler(ch);
 
   } while (ch != KEY_BTAB);
 }
 
-void VimEditor::endWindow() { endwin(); }
+void VimEditor::endEditor() { endwin(); }
 
 VimEditor::~VimEditor() {}
 

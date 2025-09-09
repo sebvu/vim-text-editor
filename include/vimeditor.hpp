@@ -11,17 +11,14 @@ private:
   int curr_x = MIN_X, curr_y = MIN_Y, ch;
   std::vector<std::string> lines = {""};
 
-  void chHandler(char c);
-
+  void chHandler(int c);
   void renderLines();
-
-  void runWindow();
-
-  void endWindow();
 
 public:
   VimEditor();
   ~VimEditor();
+  void runEditor();
+  void endEditor();
   void loadFile();
   void saveFile();
 };
