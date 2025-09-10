@@ -16,6 +16,7 @@ it is 100% vim motions so that's the tutorial to use it
 
 ## dev roadmap
 
+```
 - [x] be able to type text
 - [x] add number lines
 - [x] be able to do normal functions on a normal text editor
