@@ -24,7 +24,7 @@ it is 100% vim motions so that's the tutorial to use it
   - [x] backspace to delete 
   - [x] arrows to go left right up down (only on spaces filled up, including the space key) 
   - [x] backspace on beginning of line appends text to prev line
-  - [ ] enter on any part of line appends rest of text to next NEW line
+  - [x] enter on any part of line appends rest of text to next NEW line
 - [] implement seamless scrolling logic
 - [] be able to save
 - [] be able to edit current files

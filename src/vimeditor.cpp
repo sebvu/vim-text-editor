@@ -55,12 +55,15 @@ VimEditor::VimEditor() {
         curr_y -= 1;
       }
       break;
-    case '\n':
-      lines.push_back("");
+    case '\n': {
+      std::string appStr =
+          lines[curr_y].substr(curr_x - MIN_X, lines[curr_y].size());
+      lines[curr_y].erase(curr_x - MIN_X, lines[curr_y].size());
+      lines.insert(lines.begin() + curr_y + 1, appStr);
       curr_y += 1;
       curr_x = MIN_X;
       break;
-
+    }
     default:
       lines[curr_y].insert(lines[curr_y].begin() + curr_x - MIN_X, ch);
       curr_x += 1;
