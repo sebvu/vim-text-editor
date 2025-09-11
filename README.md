@@ -26,9 +26,12 @@ it is 100% vim motions so that's the tutorial to use it
   - [x] backspace on beginning of line appends text to prev line
   - [x] enter on any part of line appends rest of text to next NEW line
 - [] implement seamless scrolling logic
+- [] 
 - [] be able to save
 - [] be able to edit current files
 - [] be able to edit files WITH text editor
+
+- [] modularize movement methods for consistent rules
 
 - [] if normal mode
   - [x] h j k l
