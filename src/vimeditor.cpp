@@ -7,29 +7,19 @@
 VimEditor::VimEditor() {
   modeActions[Mode::NORMAL] = [this](int c) {
     switch (c) {
-    case 104: // h
-      if (curr_x > MIN_X)
-        curr_x -= 1;
+    case 'h':
+      moveLeft();
       break;
-    case 107: // k
-      if (curr_y > MIN_Y) {
-        curr_y -= 1;
-        curr_x =
-            std::min(static_cast<int>(lines[curr_y].size()) + MIN_X, curr_x);
-      }
+    case 'j':
+      moveDown();
       break;
-    case 106: // j
-      if (curr_y < static_cast<int>(lines.size()) - 1) {
-        curr_y += 1;
-        curr_x =
-            std::min(static_cast<int>(lines[curr_y].size()) + MIN_X, curr_x);
-      }
+    case 'k':
+      moveUp();
       break;
-    case 108: // l
-      if (curr_x < static_cast<int>(lines[curr_y].size()) + MIN_X)
-        curr_x += 1;
+    case 'l':
+      moveRight();
       break;
-    case 105: // i INSERT MODE
+    case 'i':
       mode = Mode::INSERT;
       break;
     default:
@@ -55,15 +45,9 @@ VimEditor::VimEditor() {
         curr_y -= 1;
       }
       break;
-    case '\n': {
-      std::string appStr =
-          lines[curr_y].substr(curr_x - MIN_X, lines[curr_y].size());
-      lines[curr_y].erase(curr_x - MIN_X, lines[curr_y].size());
-      lines.insert(lines.begin() + curr_y + 1, appStr);
-      curr_y += 1;
-      curr_x = MIN_X;
+    case '\n':
+      insertNewline();
       break;
-    }
     default:
       lines[curr_y].insert(lines[curr_y].begin() + curr_x - MIN_X, ch);
       curr_x += 1;
@@ -79,6 +63,46 @@ VimEditor::VimEditor() {
 
 }; // include file loading later
 
+void VimEditor::moveLeft() {
+  if (curr_x > MIN_X)
+    curr_x -= 1;
+}
+
+void VimEditor::moveRight() {
+  if (curr_x < static_cast<int>(lines[curr_y].size()) + MIN_X)
+    curr_x += 1;
+}
+
+void VimEditor::moveUp() {
+  if (curr_y > MIN_Y) {
+    if (curr_y > scroll_offset) {
+      curr_y -= 1;
+    } else if (scroll_offset > 0) {
+      scroll_offset--;
+    }
+    curr_x = std::min(static_cast<int>(lines[curr_y].size()) + MIN_X, curr_x);
+  }
+}
+
+void VimEditor::moveDown() {
+  if (curr_y < static_cast<int>(lines.size()) - 1) {
+    if (curr_y < max_y) {
+      curr_y += 1;
+    } else {
+      scroll_offset++;
+    }
+    curr_x = std::min(static_cast<int>(lines[curr_y].size()) + MIN_X, curr_x);
+  }
+}
+
+void VimEditor::insertNewline() {
+  std::string appStr = lines[curr_y].substr(curr_x - MIN_X);
+  lines[curr_y].erase(curr_x - MIN_X);
+  lines.insert(lines.begin() + curr_y + 1, appStr);
+  curr_y += 1;
+  curr_x = MIN_X;
+}
+
 void VimEditor::chHandler(int c) {
 
   auto it = modeActions.find(mode);
@@ -88,7 +112,8 @@ void VimEditor::chHandler(int c) {
 }
 
 void VimEditor::renderLines() {
-  for (int i = 0; i < static_cast<int>(lines.size()) && i < LINES - 2; i++) {
+  for (int i = scroll_offset; i < static_cast<int>(lines.size()) && i < max_y;
+       i++) {
     int rel = i - curr_y; // relative line pos
     if (i == curr_y) {
       mvprintw(i, 0, "%2d %s", i, lines[i].c_str());
@@ -110,6 +135,8 @@ void VimEditor::runEditor() {
 
   do {
     clear(); // clears current window (stdscr)
+
+    max_y = LINES - 2; // padding for mode display
 
     renderLines();
 
